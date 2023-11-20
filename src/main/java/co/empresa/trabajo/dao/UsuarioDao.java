@@ -6,30 +6,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.empresa.trabajo.modelo.Usuario;
+import co.empresa.trabajo.modelo.User;
 import co.empresa.trabajo.utilidades.Conexion;
 
 public class UsuarioDao {
 
 	private Conexion conexion;
-	private static final String INSERT_USUARIO_SQL = "INSERT INTO usuario(nombre, email, pais) VALUES (?, ?, ?);";
-	private static final String DELETE_USUARIO_SQL = "DELETE FROM usuario WHERE id = ?;";
-	private static final String UPDATE_USUARIO_SQL = "UPDATE usuario SET nombre = ?, email = ?, pais = ? WHERE id = ?;";
-	private static final String SELECT_USUARIO_BY_ID = "SELECT * FROM usuario WHERE id = ?;";
-	private static final String SELECT_ALL_USUARIOS = "SELECT * FROM usuario;";
+	private static final String INSERT_USER_SQL = "INSERT INTO users(nombre, email, pais) VALUES (?, ?, ?);";
+	private static final String DELETE_USER_SQL = "DELETE FROM users WHERE id = ?;";
+	private static final String UPDATE_USER_SQL = "UPDATE users SET nombre = ?, email = ?, pais = ? WHERE id = ?;";
+	private static final String SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = ?;";
+	private static final String SELECT_ALL_USERS = "SELECT * FROM users;";
 
 	public UsuarioDao() {
 
 		this.conexion = Conexion.getConexion();
 	}
 
-	public void insert(Usuario usuario) throws SQLException {
+	public void insert(User user) throws SQLException {
 
 		try {
-			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(INSERT_USUARIO_SQL);
-			preparedStatement.setString(1, usuario.getNombre());
-			preparedStatement.setString(2, usuario.getEmail());
-			preparedStatement.setString(3, usuario.getPais());
+			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(INSERT_USER_SQL);
+			preparedStatement.setString(1, user.getUsername());
+			preparedStatement.setString(2, user.getPass());
+			preparedStatement.setString(3, user.getEmail());
 			conexion.execute();
 		} catch (SQLException e) {
 
@@ -39,7 +39,7 @@ public class UsuarioDao {
 	public void delete(int id) throws SQLException {
 
 		try {
-			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(DELETE_USUARIO_SQL);
+			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(DELETE_USER_SQL);
 			preparedStatement.setInt(1, id);
 			conexion.execute();
 		} catch (SQLException e) {
@@ -47,15 +47,15 @@ public class UsuarioDao {
 		}
 	}
 
-	public void update(Usuario usuario) throws SQLException {
+	public void update(User user) throws SQLException {
 
 
 		try {
-			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(UPDATE_USUARIO_SQL);
-			preparedStatement.setString(1, usuario.getNombre());
-			preparedStatement.setString(2, usuario.getEmail());
-			preparedStatement.setString(3, usuario.getPais());
-			preparedStatement.setInt(4, usuario.getId());
+			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(UPDATE_USER_SQL);
+			preparedStatement.setString(1, user.getUsername());
+			preparedStatement.setString(3, user.getPass());
+			preparedStatement.setString(2, user.getEmail());
+			preparedStatement.setInt(4, user.getId());
 			conexion.execute();		
 			} catch (SQLException e)
 			
@@ -65,55 +65,55 @@ public class UsuarioDao {
 
 	}
 
-	public List<Usuario> selectAll() {
+	public List<User> selectAll() {
 
-		List<Usuario> usuarios = new ArrayList<>();
+		List<User> users = new ArrayList<>();
 
 		try {
 
-			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(SELECT_ALL_USUARIOS);
+			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(SELECT_ALL_USERS);
 
 			ResultSet rs = conexion.query();
 			
 			while (rs.next()) {
 
 				int id = rs.getInt("id");
-				String nombre = rs.getString("nombre");
+				String username = rs.getString("username");
+				String pass = rs.getString("pass");
 				String email = rs.getString("email");
-				String pais = rs.getString("pais");
-				usuarios.add(new Usuario(id, nombre, email, pais));
+				users.add(new User(id, username, pass, email));
 			}
 
 		} catch (SQLException e) {
 
 		}
 
-		return usuarios;
+		return users;
 	}
 
-	public Usuario select(int id) {
+	public User select(int id) {
 
-		Usuario usuario = null;
+		User user = null;
 
 		try {
 
-			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(SELECT_USUARIO_BY_ID);
+			PreparedStatement preparedStatement = (PreparedStatement)conexion.setPreparedStatement(SELECT_USER_BY_ID);
 			preparedStatement.setInt(1, id);
 			ResultSet rs = conexion.query();
 
 			while (rs.next()) {
 
-				String nombre = rs.getString("nombre");
+				String username = rs.getString("username");
+				String pass = rs.getString("pass");
 				String email = rs.getString("email");
-				String pais = rs.getString("pais");
-				usuario = new Usuario(id, nombre, email, pais);
+				user = new User(id, username, pass, email);
 			}
 
 		} catch (SQLException e) {
 
 		}
 
-		return usuario;
+		return user;
 	}
 
 }

@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import co.empresa.trabajo.dao.UsuarioDao;
-import co.empresa.trabajo.modelo.Usuario;
+import co.empresa.trabajo.modelo.User;
+import co.empresa.trabajo.modelo.bill;
 
 /**
  * Servlet implementation class UsuarioServlet
@@ -93,20 +94,20 @@ public class UsuarioServlet extends HttpServlet {
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("usuario.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("form.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	private void insertarUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, SQLException, IOException {
 
-		String nombre = request.getParameter("nombre");
+		String username = request.getParameter("username");
+		String pass = request.getParameter("pass");
 		String email = request.getParameter("email");
-		String pais = request.getParameter("pais");
 
-		Usuario usuario = new Usuario(nombre, email, pais);
+		User user = new User(username, pass, email);
 
-		usuarioDao.insert(usuario);
+		usuarioDao.insert(user);
 
 		response.sendRedirect("list");
 	}
@@ -116,11 +117,11 @@ public class UsuarioServlet extends HttpServlet {
 
 		int id = Integer.parseInt(request.getParameter("id"));
 
-		Usuario usuarioActual = usuarioDao.select(id);
+		User usuarioActual = usuarioDao.select(id);
 
 		request.setAttribute("usuario", usuarioActual);
 		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("usuario.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("form.jsp");
 		dispatcher.forward(request, response);
 
 	}
@@ -129,13 +130,13 @@ public class UsuarioServlet extends HttpServlet {
 			throws ServletException, SQLException, IOException {
 
 		int id = Integer.parseInt(request.getParameter("id"));
-		String nombre = request.getParameter("nombre");
-		String email = request.getParameter("email");
-		String pais = request.getParameter("pais");
+		String nombre = request.getParameter("username");
+		String email = request.getParameter("pass");
+		String pais = request.getParameter("email");
 
-		Usuario usuario = new Usuario(id, nombre, email, pais);
+		User user = new User(id, nombre, email, pais);
 
-		usuarioDao.update(usuario);
+		usuarioDao.update(user);
 
 		response.sendRedirect("list");
 	}
@@ -153,10 +154,10 @@ public class UsuarioServlet extends HttpServlet {
 	private void listUsuarios(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, SQLException, IOException {
 
-		List<Usuario> listUsuarios = usuarioDao.selectAll();
+		List<User> listUsuarios = usuarioDao.selectAll();
 		request.setAttribute("listUsuarios", listUsuarios);
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("usuarioList.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
 		dispatcher.forward(request, response);
 	}
 }

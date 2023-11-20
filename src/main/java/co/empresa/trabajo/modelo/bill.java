@@ -1,6 +1,7 @@
 package co.empresa.trabajo.modelo;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,20 +10,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usuario implements Serializable {
+public class bill implements Serializable {
 
 	private Integer id;
 
-	private String nombre;
+	private Date date_bill;
 
-	private String email;
+	private Integer user_id;
 
-	private String pais;
+	private boolean value;
+	
+	private Integer type;
+	
+	private String observation;
 
-	public Usuario(String nombre, String email, String pais) {
-
-		this.nombre = nombre;
-		this.email = email;
-		this.pais = pais;
-	}
+	
 }
